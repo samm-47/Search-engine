@@ -19,7 +19,7 @@ model = genai.GenerativeModel("tunedModels/real-estate-glossary-model-ug8dc3qfiq
 # Store the chat history in a global variable
 chat_history = [
     {"role": "user", "parts": "Hello, you are a chatbot designed to be a glossary for real estate. Only output in sentences."},
-    {"role": "model", "parts": "Hello! How can I help you?"}  # Shortened response
+    {"role": "model", "parts": "Hello! How can I help you with real estate terms today?"}  # Shortened response
 ]
 
 @app.route('/')
@@ -34,6 +34,7 @@ def chat_with_bot():
 
     if not user_question:
         return jsonify({"error": "Question is required"}), 400
+    
 
     # Append the user's question to the chat history
     chat_history.append({"role": "user", "parts": user_question})
