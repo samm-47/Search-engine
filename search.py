@@ -4,23 +4,28 @@ import os
 from flask_cors import CORS
 import time
 
+
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)
 
+
 # Retrieve API key from the environment variable
 API_KEY = os.environ.get("GENAI_API_KEY")
+
 
 # Configure the Generative AI model
 genai.configure(api_key=API_KEY)
 # Assuming you're using a fine-tuned model (real-estate-glossary-model in this case)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
+
 # Define a route for the chatbot interaction
 chat_history = [
     {"role": "user", "parts": "Hello, you are a chatbot designed to be a glossary for real estate. Only output in sentences."},
     {"role": "model", "parts": "Hello! How can I help you with real estate terms today?"}
 ]
+
 
 glossary_terms = [
     "2-Way Lighting", "2-Wire Lighting System", "Abiotic components", "Abiotic depletion", "ACH (Air Changes per Hour)",
@@ -74,48 +79,78 @@ glossary_terms = [
     "Zero-energy building", "Zoning"
 ]
 
+
 @app.route('/')
 def home():
     return render_template('index.html')
 
+
 @app.route('/api/definition/<term>', methods=['GET'])
 def get_definition(term):
-    
+    """
+    This route handles fetching the definition of a term from the generative model.
+    """
     user_question = f"Define the term '{term}' in simple language. Please respond in no more than 100 words so that the user can understand. These are terms related to sustainabilty living."
+
 
     # Append the user's question to the chat history for context
     chat_history.append({"role": "user", "parts": user_question})
+
 
     try:
         # Create a new chat session with the model, using the updated chat history
         chat_session = model.start_chat(history=chat_history)
 
+
         # Send the term definition request to the model
         response = chat_session.send_message(user_question)
 
+
         # Extract the response text
         response_text = response.text if hasattr(response, 'text') else "No response available."
-        
+       
     except Exception as e:
         print("Error calling chat model:", str(e))
         return jsonify({"error": "Failed to communicate with the model."}), 500
 
+
     # Append the model's response to the chat history
     chat_history.append({"role": "model", "parts": response_text})
 
+
     return jsonify({"term": term, "definition": response_text})
+
 
 @app.route('/api/glossary', methods=['GET'])
 def get_glossary():
-    
-    # Return the complete glossary terms list sorted alphabetically.
    
-    return jsonify(sorted(glossary_terms))
-    
+    grouped_terms = groupTermsByFirstLetter(glossary_terms)
+   
+    return jsonify(grouped_terms)
+   
+
+
+def groupTermsByFirstLetter(glossary_terms):
+    grouped = {}
+    for term in glossary_terms:
+        first_char = term[0].upper()
+
+
+        # If the first character is a letter or a number, group accordingly
+        group_key = first_char if first_char.isalpha() else '#'
+       
+        if group_key not in grouped:
+            grouped[group_key] = []
+        grouped[group_key].append(term)
+   
+    return grouped
 @app.route('/api/search', methods=['GET'])
 def search_glossary():
     query = request.args.get('query', '').lower()
 
+
+   
+   
     if query:
         # Filter terms that start with the query
         filtered_terms = [term for term in glossary_terms if term.lower().startswith(query)]
@@ -123,7 +158,37 @@ def search_glossary():
     else:
         filtered_terms = glossary_terms
 
+
     return jsonify(filtered_terms)
+
+
+@app.route('/api/sections', methods=['GET'])
+def get_sections():
+    # Group terms by their first letter (or '#' for numbers and others)
+    grouped_terms = {}
+    for term in glossary_terms:
+        first_char = term[0].upper()
+        group_key = first_char if first_char.isalpha() else '#'
+        if group_key not in grouped_terms:
+            grouped_terms[group_key] = []
+        grouped_terms[group_key].append(term)
+
+
+    # Sort the keys: letters first (A-Z), then numbers/others
+    sorted_keys = sorted(grouped_terms.keys(), key=lambda x: (x != '#', x))
+
+
+    sections = []
+    for key in sorted_keys:
+        section = {
+            'title': 'Numbers & Others' if key == '#' else key,
+            'terms': sorted(grouped_terms[key])  # Sort terms alphabetically
+        }
+        sections.append(section)
+
+
+    return jsonify(sections)
+
 
 # Run the Flask app
 if __name__ == '__main__':
