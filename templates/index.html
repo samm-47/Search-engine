@@ -12,10 +12,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: linear-gradient(to bottom, #c4eac4 150px, #FFFFFF 150px);
-      height: 100vh;
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
+      background: linear-gradient(to bottom, #e6f5e6 150px, #FFFFFF 150px);
+      height: 100vh; /* Full viewport height */
+      background-repeat: no-repeat; /* Prevent the gradient from repeating */
+      background-size: 100% 100%; /* Ensure the gradient spans the entire body */
     }
 
     #search-bar {
@@ -25,33 +25,136 @@
       font-size: 16px;
       border-radius: 10px;
       background-color: #f0f0f0;
+      z-index: 10;
     }
 
+    h1 {
+      margin-top: 20px;
+      color:rgb(31, 69, 36);
+    }
+
+    h3 {
+      margin: 20px;
+      text-align: center;
+      font-size: 1.2em;
+      color:rgb(31, 69, 36);
+    }
+
+    p {
+      margin: 10px 0;
+      text-align: center;
+      color:rgb(31, 69, 36);
+    }
+
+    a {
+      color: #007BFF;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Search Results Layout */
     #results {
-      display: none;
+      display: none; /* Initially hidden */
       width: 300px;
       padding: 0;
-      list-style: none;
+      list-style: none; /* Remove bullet points */
       margin-top: 20px;
       margin-left: auto;
-      margin-right: auto;
+      margin-right: auto; /* Center the list horizontally */
       background: white;
     }
+
 
     .result-item {
       padding: 10px;
       margin: 5px 0;
-      border: 1px solid #888;
+      border: 1px solid #888; /* Same outline as section items */
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
       background-color: white;
     }
 
+
     .result-item:hover {
       background-color: #8bb673;
     }
 
+
+    /* Sections Container (on white background) */
+    #sections-container {
+      background-color: #FFFFFF;
+      width: 100%;
+      padding: 20px;
+      margin-top: 40px;
+      box-sizing: border-box;
+    }
+   
+    #sections {
+      display: flex;
+      flex-wrap: wrap; /* Allow wrapping for multiple rows */
+      gap: 20px; /* Space between sections */
+      justify-content: center; /* Center the sections */
+      width: 100%;
+    }
+   
+    /* Section Title and Items */
+    .section {
+      width: calc(45% - 20px); /* Each section takes up 50% of the row minus the gap */
+      min-height: 150px;           /* Minimum height for all sections */
+      max-height: 700px;  
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      background-color: #f9f9f9;
+      
+    }
+   
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color:rgb(32, 73, 37);
+      cursor: pointer;
+      margin-bottom: 10px;
+      text-decoration: underline; /* Adds the underline */
+    }
+   
+    .section-list {
+      display: flex;
+      flex-wrap: wrap; /* Allow wrapping for section items */
+      gap: 10px; /* Space between items */
+      justify-content: center; /* Center items */
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+   
+    .section-item {
+      padding: 8px;
+      margin: 5px 0;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      max-width: calc(50% - 10px); /* Prevent items from exceeding half the section width */
+      box-sizing: border-box; /* Include padding and border in size */
+      color:rgb(27, 63, 31);
+    }
+   
+    .section-item:hover {
+      background-color: #d0d5d0;
+    }
+   
+
+
+
+
+    /* Modal Styles */
     #modal {
       display: none;
       position: fixed;
@@ -67,13 +170,17 @@
       text-align: center;
     }
 
+
     #modal h2 {
       margin: 0 0 10px;
     }
 
+
     #modal p {
       margin: 10px 0;
+      color:rgb(31, 31, 31);
     }
+
 
     #modal-close {
       margin-top: 20px;
@@ -85,10 +192,13 @@
       cursor: pointer;
     }
 
+
     #modal-close:hover {
       background-color: #8bb673;
     }
 
+
+   
     #overlay {
       display: none;
       position: fixed;
@@ -103,9 +213,22 @@
 </head>
 <body>
 
-  <h1>Green Living Glossary</h1>
+
+  <h1>House Sustainability Tips</h1>  
   <input type="text" id="search-bar" placeholder="Search glossary terms..." />
-  <ul id="results"></ul>
+  <h3></h3>
+  <h4>For the best results in the Glossary search, we recommend using any combination of familiar terms, such as Web, Conservation, Heat Recovery, Zero carbon Building, or any other combinations</h4>
+  <p>Visit the offical website for more information: <a href="https://greenifyai.com" target="_blank">greenifyai.com</a></p>
+  
+ 
+  <!-- Sections Container (on white background) -->
+  <div id="sections-container">
+    <div id="sections"></div>
+    <ul id="results"></ul>
+  </div>
+ 
+ 
+
 
   <!-- Modal -->
   <div id="overlay"></div>
@@ -115,53 +238,94 @@
     <button id="modal-close">Close</button>
   </div>
 
+
   <script>
     let glossaryTerms = [];
 
+
     fetch('/api/glossary')
       .then(response => response.json())
-      .then(terms => {
-        glossaryTerms = terms;
-        displayAllTerms(terms);
+      .then(groupedTerms => {
+        glossaryTerms = groupedTerms;
+        displaySections(); // Show terms in sections initially
       });
-
+   
     const searchBar = document.getElementById('search-bar');
     const resultsList = document.getElementById('results');
+    const sectionsContainer = document.getElementById('sections');
     const modal = document.getElementById('modal');
     const modalTitle = document.getElementById('modal-title');
     const modalContent = document.getElementById('modal-content');
     const modalClose = document.getElementById('modal-close');
     const overlay = document.getElementById('overlay');
-
-    // Display all glossary terms initially
-    function displayAllTerms(terms) {
-      resultsList.innerHTML = '';
-      resultsList.style.display = 'block';
-
-      terms.forEach(term => {
-        const li = document.createElement('li');
-        li.textContent = term;
-        li.className = 'result-item';
-        li.addEventListener('click', () => showDefinition(term));
-        resultsList.appendChild(li);
-      });
-    }
-
-    // Filter terms as the user types in the search bar
-    searchBar.addEventListener('input', () => {
-      const query = searchBar.value.toLowerCase();
-
-      if (query) {
-        fetch(`/api/search?query=${query}`)
-          .then(response => response.json())
-          .then(filteredTerms => {
-            displayAllTerms(filteredTerms);
+   
+    // Function to display terms in sections based on the starting letter
+    function displaySections() {
+      sectionsContainer.innerHTML = '';
+   
+      // Fetch grouped and sorted sections from the server
+      fetch('/api/sections')
+        .then(response => response.json())
+        .then(sections => {
+          sections.forEach(section => {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'section';
+   
+            const sectionTitle = document.createElement('div');
+            sectionTitle.className = 'section-title';
+            sectionTitle.textContent = section.title;
+   
+            const sectionList = document.createElement('ul');
+            sectionList.className = 'section-list';
+   
+            // Create list of terms for each section
+            section.terms.forEach(term => {
+              const li = document.createElement('li');
+              li.className = 'section-item';
+              li.textContent = term;
+              li.addEventListener('click', () => showDefinition(term));
+              sectionList.appendChild(li);
+            });
+   
+            sectionDiv.appendChild(sectionTitle);
+            sectionDiv.appendChild(sectionList);
+            sectionsContainer.appendChild(sectionDiv);
           });
-      } else {
-        displayAllTerms(glossaryTerms); // Reset to the full glossary list
-      }
-    });
+        });
+    }
+   
+   
+   
+  searchBar.addEventListener('input', () => {
+    const query = searchBar.value.toLowerCase();
+    resultsList.innerHTML = '';
 
+
+    // If there's a query, send it to the server for filtering
+    if (query) {
+      fetch(`/api/search?query=${query}`)
+        .then(response => response.json())
+        .then(filteredTerms => {
+          filteredTerms.forEach(term => {
+            const li = document.createElement('li');
+            li.textContent = term;
+            li.className = 'result-item';
+            li.addEventListener('click', () => showDefinition(term));
+            resultsList.appendChild(li);
+          });
+         
+          resultsList.style.display = 'block';
+          sectionsContainer.style.display = 'none';
+        });
+    } else {
+      resultsList.style.display = 'none';
+      sectionsContainer.style.display = 'flex';
+      displaySections();  // Display sections when no search query
+    }
+  });
+
+
+   
     // Show definition in modal
     function showDefinition(term) {
       fetch(`/api/definition/${term}`)
@@ -179,23 +343,22 @@
             overlay.style.display = 'block';
           }
         })
-        .catch(() => {
+        .catch(error => {
           modalTitle.textContent = "Error";
           modalContent.textContent = "Failed to fetch definition.";
           modal.style.display = 'block';
           overlay.style.display = 'block';
         });
     }
-
+   
     // Close modal
     modalClose.addEventListener('click', closeModal);
     overlay.addEventListener('click', closeModal);
-
+   
     function closeModal() {
       modal.style.display = 'none';
       overlay.style.display = 'none';
     }
-</script>
-
+  </script>
 </body>
 </html>
