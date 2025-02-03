@@ -102,7 +102,7 @@
     /* Section Title and Items */
     .section {
       width: calc(45% - 20px); /* Each section takes up 50% of the row minus the gap */
-      min-height: 150px;           /* Minimum height for all sections */
+      min-height: 200px;           /* Minimum height for all sections */
       max-height: 700px;  
       border: 1px solid #ddd;
       border-radius: 10px;
@@ -201,36 +201,32 @@
     
 
     /* Responsive Styles for Mobile */
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
       #search-bar {
         width: 90%;
       }
-
+    
       .section {
-        width: 100%; 
-        min-height: auto; 
+        width: 100%; /* Full width for smaller screens */
+        min-height: auto; /* No minimum height */
       }
-
+    
       .section-title {
-        font-size: 1.2rem; 
+        font-size: 1.1rem; /* Slightly smaller text for mobile */
       }
-
+    
       .section-item {
-        max-width: 100%; 
+        max-width: 100%; /* Ensure section items take full width */
+        font-size: 0.60rem; /* Reduce font size for better fit */
       }
-
-      h3 {
-        font-size: 1em; 
-      }
-
-      h4 {
-        font-size: 1em; 
-      }
-
-      p {
-        font-size: 0.9em; 
+    
+      h3, h4, p {
+        font-size: 0.9em; /* Reduce font size for mobile */
       }
     }
+
+    
+    
 
     
 
