@@ -82,6 +82,8 @@
       margin-left: auto;
       margin-right: auto; 
       background: white;
+      transition: opacity 0.3s ease-in-out; /* Smooth transition */
+
     }
 
     .result-item {
@@ -128,7 +130,14 @@
       transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
     }
-
+    #sections-container {
+      background-color: #FFFFFF;
+      width: 100%;
+      padding: 20px;
+      margin-top: 40px;
+      box-sizing: border-box;
+      min-height: calc(100vh - 200px); /* Adjust this value based on your layout */
+    }
     .section:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
@@ -168,6 +177,7 @@
     .section-item:hover {
       background-color: #D6E9D9;
     }
+    
 
     /* Modal Styles */
     #modal {
@@ -246,6 +256,75 @@
       h3, h4, p {
         font-size: 0.9em; /* Reduce font size for mobile */
       }
+      h4.center-text {
+        width: 800px;
+        color: rgb(255, 255, 255);
+        text-align: center;
+        margin: 0 auto;
+        font-weight: normal;
+  
+      }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 60vh; /* Top half of the viewport height */
+        background-image: url('static/images/home.png');
+        background-size: cover; /* Makes the image cover the screen */
+        background-position: center; /* Center the image */
+        background-repeat: no-repeat; /* Prevents repeating the image */
+       
+    }
+      
+    }
+
+    @media (max-width: 500px) {
+      #search-bar {
+        width: 90%;
+      }
+    
+      .section {
+        width: 100%; /* Full width for smaller screens */
+        min-height: auto; /* No minimum height */
+      }
+    
+      .section-title {
+        font-size: 1.1rem; /* Slightly smaller text for mobile */
+      }
+    
+      .section-item {
+        max-width: 100%; /* Ensure section items take full width */
+        font-size: 0.60rem; /* Reduce font size for better fit */
+      }
+    
+      h3, h4, p {
+        font-size: 0.9em; /* Reduce font size for mobile */
+      }
+      h4.center-text {
+        width: 300px;
+        color: rgb(255, 255, 255);
+        text-align: center;
+        margin: 0 auto;
+        font-weight: normal;
+  
+      }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 65vh; /* Top half of the viewport height */
+        background-image: url('static/images/home.png');
+        background-size: cover; /* Makes the image cover the screen */
+        
+        background-repeat: no-repeat; /* Prevents repeating the image */
+       
+    }
     }
 
     
@@ -346,6 +425,7 @@
             resultsList.innerHTML = ''; // Clear previous results
     
             if (filteredTerms.length > 0) {
+              // Show search results
               filteredTerms.forEach(term => {
                 const li = document.createElement('li');
                 li.textContent = term;
@@ -354,23 +434,24 @@
                 resultsList.appendChild(li);
               });
     
-              resultsList.style.display = 'block';
-              sectionsContainer.style.display = 'none';
+              resultsList.style.display = 'block'; // Show results
+              sectionsContainer.style.display = 'none'; // Hide sections
             } else {
               // No results found - show sections again
-              resultsList.style.display = 'none';
-              sectionsContainer.style.display = 'flex';
+              resultsList.style.display = 'none'; // Hide results
+              sectionsContainer.style.display = 'flex'; // Show sections
             }
           })
           .catch(error => {
             console.error("Search failed:", error);
-            resultsList.style.display = 'none';
-            sectionsContainer.style.display = 'flex';
+            resultsList.style.display = 'none'; // Hide results
+            sectionsContainer.style.display = 'flex'; // Show sections
           });
       } else {
-        resultsList.style.display = 'none';
-        sectionsContainer.style.display = 'flex';
-        displaySections(); // Show sections if search is empty
+        // If search bar is empty, show sections
+        resultsList.style.display = 'none'; // Hide results
+        sectionsContainer.style.display = 'flex'; // Show sections
+        displaySections(); // Refresh sections if needed
       }
     });
 
