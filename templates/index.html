@@ -6,48 +6,63 @@
   <title>Green Living Glossary</title>
   <style>
     body {
+      
       font-family: Arial, sans-serif;
       padding: 0;
       margin: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: linear-gradient(to bottom, #e6f5e6 150px, #FFFFFF 150px);
-      height: 100vh; /* Full viewport height */
-      background-repeat: no-repeat; 
+      
+
+      
+      height: 90vh; /* Full viewport height */
+      
       background-size: 100% 100%; 
     }
 
     #search-bar {
       width: 500px;
+      height: 40px;
       padding: 10px;
       margin-top: 10px;
       font-size: 16px;
       border-radius: 10px;
       background-color: #f0f0f0;
       z-index: 10;
+      border: 6px solid rgb(103, 99, 99); /* Creates a visible box */
+      
     }
 
     h1 {
       margin-top: 20px;
-      color:rgb(31, 69, 36);
+      color:rgb(255, 255, 255); 
+    }
+
+    h4.center-text {
+      width: 800px;
+      color: rgb(255, 255, 255);
+      text-align: center;
+      margin: 0 auto;
+      font-weight: normal;
+
     }
 
     h3 {
       margin: 20px;
       text-align: center;
       font-size: 1.2em;
-      color:rgb(31, 69, 36);
+      color:rgb(255, 255, 255); 
     }
 
     p {
       margin: 10px 0;
       text-align: center;
-      color:rgb(31, 69, 36);
+      color:rgb(255, 255, 255); 
     }
 
     a {
-      color: #007BFF;
+      color:rgb(65, 158, 111);
       text-decoration: none;
       font-weight: bold;
     }
@@ -59,7 +74,7 @@
     /* Search Results Layout */
     #results {
       display: none; /* Initially hidden */
-      width: 300px;
+      width: 500px;
       padding: 0;
       list-style: none; /* Remove bullet points */
       margin-top: 20px;
@@ -79,7 +94,7 @@
     }
 
     .result-item:hover {
-      background-color: #8bb673;
+      background-color: #C2E0C6;
     }
 
     /* Sections Container (on white background) */
@@ -104,12 +119,13 @@
       width: calc(45% - 20px); /* Each section takes up 50% of the row minus the gap */
       min-height: 200px;           /* Minimum height for all sections */
       max-height: 700px;  
-      border: 1px solid #ddd;
+      border: 1px solid #D6E9D9;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 20px;
       background-color: #f9f9f9;
       transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
     }
 
     .section:hover {
@@ -120,7 +136,7 @@
     .section-title {
       font-size: 1.5rem;
       font-weight: bold;
-      color:rgb(32, 73, 37);
+      color: #2F5D3F;
       cursor: pointer;
       margin-bottom: 10px;
       text-decoration: underline; /* Adds the underline */
@@ -145,11 +161,11 @@
       transition: background-color 0.3s;
       max-width: calc(50% - 10px); 
       box-sizing: border-box; /* Include padding and border in size */
-      color:rgb(27, 63, 31);
+      color:rgb(0, 0, 0);
     }
 
     .section-item:hover {
-      background-color: #d0d5d0;
+      background-color: #D6E9D9;
     }
 
     /* Modal Styles */
@@ -180,7 +196,7 @@
     #modal-close {
       margin-top: 20px;
       padding: 10px;
-      background-color: #406827;
+      background-color: #2F855A;
       color: white;
       border: none;
       border-radius: 4px;
@@ -188,7 +204,7 @@
     }
 
     #modal-close:hover {
-      background-color: #8bb673;
+      background-color: #1F6A44;
     }
 
     #overlay {
@@ -240,10 +256,12 @@
 </head>
 <body>
 
-  <h1>House Sustainability Tips</h1>  
+  <h1>House Sustainability Tips</h1> 
+   
+  <h4 class="center-text">For the best results in the Glossary search, we recommend using any combination of familiar terms, such as Web, Conservation, Heat Recovery, Zero carbon Building, or any other combinations</h4>
+  <h3></h3>
   <input type="text" id="search-bar" placeholder="Search glossary terms..." />
   <h3></h3>
-  <h4 class="center-text">For the best results in the Glossary search, we recommend using any combination of familiar terms, such as Web, Conservation, Heat Recovery, Zero carbon Building, or any other combinations</h4>
   <p class="center-text">Visit the offical website for more information: <a href="https://greenifyai.com" target="_blank">greenifyai.com</a></p>
   
   
@@ -262,6 +280,10 @@
   </div>
 
   <script>
+    window.onload = function() {
+      document.body.style.backgroundImage = "url('/static/images/home.png?v=" + new Date().getTime() + "')";
+    }
+    
     let glossaryTerms = [];
 
     fetch('/api/glossary')
