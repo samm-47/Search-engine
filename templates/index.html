@@ -13,7 +13,7 @@
     flex-direction: column;
     align-items: center;
     height: 100vh; /* Top half of the viewport height */
-    background-image: url("{{ url_for('static', filename='images/home.png') }}");
+    background-image: url('static/images/home.png');
     background-size: cover; /* Makes the image cover the screen */
     background-position: center; /* Center the image */
     background-repeat: no-repeat; /* Prevents repeating the image */
@@ -30,6 +30,8 @@
       background-color: #f0f0f0;
       z-index: 10;
       border: 6px solid rgb(103, 99, 99); /* Creates a visible box */
+      box-sizing: border-box; /* Ensures the border and padding don't increase height */
+
       
     }
 
