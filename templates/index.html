@@ -332,31 +332,46 @@
         });
     }
 
+
     searchBar.addEventListener('input', () => {
       const query = searchBar.value.toLowerCase();
       resultsList.innerHTML = '';
-
+    
       if (query) {
         fetch(`/api/search?query=${query}`)
           .then(response => response.json())
           .then(filteredTerms => {
-            filteredTerms.forEach(term => {
-              const li = document.createElement('li');
-              li.textContent = term;
-              li.className = 'result-item';
-              li.addEventListener('click', () => showDefinition(term));
-              resultsList.appendChild(li);
-            });
-
-            resultsList.style.display = 'block';
-            sectionsContainer.style.display = 'none';
+            resultsList.innerHTML = ''; // Clear previous results
+    
+            if (filteredTerms.length > 0) {
+              filteredTerms.forEach(term => {
+                const li = document.createElement('li');
+                li.textContent = term;
+                li.className = 'result-item';
+                li.addEventListener('click', () => showDefinition(term));
+                resultsList.appendChild(li);
+              });
+    
+              resultsList.style.display = 'block';
+              sectionsContainer.style.display = 'none';
+            } else {
+              // No results found - show sections again
+              resultsList.style.display = 'none';
+              sectionsContainer.style.display = 'flex';
+            }
+          })
+          .catch(error => {
+            console.error("Search failed:", error);
+            resultsList.style.display = 'none';
+            sectionsContainer.style.display = 'flex';
           });
       } else {
         resultsList.style.display = 'none';
         sectionsContainer.style.display = 'flex';
-        displaySections();  // Display sections when no search query
+        displaySections(); // Show sections if search is empty
       }
     });
+
 
     // Show definition in modal
     function showDefinition(term) {
@@ -383,9 +398,11 @@
         });
     }
 
+
     // Close modal
     modalClose.addEventListener('click', closeModal);
     overlay.addEventListener('click', closeModal);
+
 
     function closeModal() {
       modal.style.display = 'none';
@@ -394,3 +411,4 @@
   </script>
 </body>
 </html>
+
