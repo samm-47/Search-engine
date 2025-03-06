@@ -6,18 +6,19 @@
   <title>Green Living Glossary</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100vh; /* Full viewport height */
-      background-image: url("{{ url_for('static', filename='images/home.png') }}");
-      background-size: cover; /* Makes the image cover the screen */
-      background-position: center; /* Centers the image */
-      background-repeat: no-repeat; /* Prevents repeating the image */
-  }
+    font-family: Arial, sans-serif;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50vh; /* Top half of the viewport height */
+    background-image: url("{{ url_for('static', filename='images/home.png') }}");
+    background-size: cover; /* Makes the image cover the screen */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevents repeating the image */
+    overflow: hidden; /* Hides anything that exceeds the height */
+}
 
     #search-bar {
       width: 500px;
