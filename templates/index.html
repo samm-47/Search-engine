@@ -13,10 +13,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      
+      background-image: url('/static/images/home.png');
 
       
-      height: 90vh; /* Full viewport height */
+      background-repeat: no-repeat; /* Prevents duplication */
+      background-attachment: fixed;
+
+      height: 100vh; /* Keeps the background fixed to viewport height */
+      overflow: hidden; /* Prevents extra content from appearing */
       
       background-size: 100% 100%; 
     }
@@ -280,9 +284,7 @@
   </div>
 
   <script>
-    window.onload = function() {
-      document.body.style.backgroundImage = "url('/static/images/home.png?v=" + new Date().getTime() + "')";
-    }
+   
     
     let glossaryTerms = [];
 
