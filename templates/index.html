@@ -294,6 +294,15 @@
 .hover-text:hover .tooltip {
   display: block; /* Show tooltip on hover */
 }
+/* Show tooltip on hover (desktop) */
+.hover-text:hover .tooltip {
+  display: block;
+}
+
+/* Show tooltip when active (mobile) */
+.hover-text.active .tooltip {
+  display: block;
+}
     
 
     /* Responsive Styles for Mobile */
@@ -520,7 +529,22 @@
   </div>
 
   <script>
-   
+    const hoverText = document.querySelector('.hover-text');
+
+    // Function to toggle the tooltip
+    function toggleTooltip() {
+      hoverText.classList.toggle('active');
+    }
+    
+    // Add event listeners for touch and click
+    hoverText.addEventListener('click', toggleTooltip);
+    
+    // Hide tooltip when clicking outside
+    document.addEventListener('click', (event) => {
+      if (!hoverText.contains(event.target)) {
+        hoverText.classList.remove('active');
+      }
+    });
     
     let glossaryTerms = [];
 
